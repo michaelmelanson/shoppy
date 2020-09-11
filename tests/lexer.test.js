@@ -3,8 +3,8 @@ const {lexer} = require('../lexer');
 describe('lexer', () => {
   it('should process a function definition', () => {
     const tokens = lexer("\n\
-function addOne(x) {\
-  return x + 1;\
+function addOne(x) {\n\
+  return x + 1;\n\
 }");
 
     expect(tokens).toEqual([

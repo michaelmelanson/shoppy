@@ -19,65 +19,67 @@ function lexer(source) {
   const tokens = [];
 
   while(position < source.length) {
-    const token = source.substr(position);
+    const text = source.substr(position);
 
     function tryToken(rule) {
-      var result = rule.exec(token);
+      var result = rule.exec(text);
       if (result !== null) {
+        const token = {match: result[0], location: {line, col}};
+
         position += result[0].length;
 
         const newlines = [...result[0].matchAll(/\n/g)];
         line += newlines.length;
 
         if (newlines.length > 0) {
-          col = 1 + (result[0].length - result[0].lastIndexOf('\n'));
+          col = result[0].length - result[0].lastIndexOf('\n');
         } else {
           col += result[0].length;
         }
 
-        return result[0];
+        return token;
       }
     }
 
-    if (match = tryToken(WHITESPACE)) {
+    if (token = tryToken(WHITESPACE)) {
       continue;
-    } else if (match = tryToken(FUNCTION)) {
-      tokens.push({type: 'function', location: {line, col}});
+    } else if (token = tryToken(FUNCTION)) {
+      tokens.push({type: 'function', location: token.location});
       continue;
-    } else if (match = tryToken(RETURN)) {
-      tokens.push({type: 'return' });
+    } else if (token = tryToken(RETURN)) {
+      tokens.push({type: 'return', location: token.location });
       continue;
-    } else if (match = tryToken(IDENTIFIER)) {
-      tokens.push({type: 'identifier', name: match });
+    } else if (token = tryToken(IDENTIFIER)) {
+      tokens.push({type: 'identifier', name: token.match, location: token.location });
       continue;
-    } else if (match = tryToken(OPEN_PAREN)) {
-      tokens.push({type: 'open-paren' });
+    } else if (token = tryToken(OPEN_PAREN)) {
+      tokens.push({type: 'open-paren', location: token.location });
       continue;
-    } else if (match = tryToken(CLOSE_PAREN)) {
-      tokens.push({type: 'close-paren' });
+    } else if (token = tryToken(CLOSE_PAREN)) {
+      tokens.push({type: 'close-paren', location: token.location });
       continue;
-    } else if (match = tryToken(OPEN_BRACE)) {
-      tokens.push({type: 'open-brace' });
+    } else if (token = tryToken(OPEN_BRACE)) {
+      tokens.push({type: 'open-brace', location: token.location });
       continue;
-    } else if (match = tryToken(CLOSE_BRACE)) {
-      tokens.push({type: 'close-brace' });
+    } else if (token = tryToken(CLOSE_BRACE)) {
+      tokens.push({type: 'close-brace', location: token.location });
       continue;
-    } else if (match = tryToken(OPERATOR)) {
-      tokens.push({type: 'operator', name: match });
+    } else if (token = tryToken(OPERATOR)) {
+      tokens.push({type: 'operator', name: token.match, location: token.location });
       continue;
-    } else if (match = tryToken(NUMBER_LITERAL)) {
-      tokens.push({type: 'number-literal', value: parseInt(match) });
+    } else if (token = tryToken(NUMBER_LITERAL)) {
+      tokens.push({type: 'number-literal', value: parseInt(token.match), location: token.location });
       continue;
-    } else if (match = tryToken(END_OF_STATEMENT)) {
-      tokens.push({type: 'end-of-statement' });
+    } else if (token = tryToken(END_OF_STATEMENT)) {
+      tokens.push({type: 'end-of-statement', location: token.location });
       continue;
     }
 
-    console.log("Unexpected character:", token[0]);
+    console.log("Unexpected character:", text[0]);
     break;
   }
 
-  tokens.push({type: 'end-of-file'});
+  tokens.push({type: 'end-of-file', location: {line, col}});
 
   return tokens;
 }

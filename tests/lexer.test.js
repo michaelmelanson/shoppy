@@ -1,4 +1,4 @@
-const {lexer} = require('../lexer');
+import {lexer} from '../lexer';
 
 describe('lexer', () => {
   it('should process a function definition', () => {

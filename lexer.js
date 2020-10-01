@@ -11,7 +11,7 @@ const OPERATOR = /^[+]/;
 const NUMBER_LITERAL = /^\d+/;
 const END_OF_STATEMENT = /^;/;
 
-function lexer(source) {
+export function lexer(source) {
   let line = 1;
   let col = 1;
   let position = 0;
@@ -41,6 +41,7 @@ function lexer(source) {
       }
     }
 
+    let token;
     if (token = tryToken(WHITESPACE)) {
       continue;
     } else if (token = tryToken(FUNCTION)) {
@@ -83,5 +84,3 @@ function lexer(source) {
 
   return tokens;
 }
-
-module.exports = {lexer};

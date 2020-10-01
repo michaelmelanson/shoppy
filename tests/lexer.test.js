@@ -23,5 +23,25 @@ function addOne(x) {\n\
       {type: 'close-brace', location: { line: 4, col: 1 }},
       {type: 'end-of-file', location: { line: 4, col: 2 }}
     ]);
-  })
+  });
+
+  it('should process a print statement', () => {
+    const tokens = lexer("\n\
+print(addOne(3) + 2);\n\
+");
+
+    expect(tokens).toEqual([
+      {type: 'identifier', name: 'print', location: { line: 2, col: 1}},
+      {type: 'open-paren', location: { line: 2, col: 6}},
+      {type: 'identifier', name: 'addOne', location: { line: 2, col: 7}},
+      {type: 'open-paren', location: { line: 2, col: 13}},
+      {type: 'number-literal', value: 3, location: { line: 2, col: 14 }},
+      {type: 'close-paren', location: { line: 2, col: 15}},
+      {type: 'operator', name: '+', location: { line: 2, col: 17 } },
+      {type: 'number-literal', value: 2, location: { line: 2, col: 19 }},
+      {type: 'close-paren', location: { line: 2, col: 20 }},
+      {type: 'end-of-statement', location: { line: 2, col: 21 } },
+      {type: 'end-of-file', location: { line: 3, col: 1 }}
+    ]);
+  });
 });

@@ -1,0 +1,10 @@
+
+
+ Source code -> [Lexer (tokenizer)] -> Tokens -> [Parser] -> Abstract syntax tree (AST)
+
+      -> [Interpreter]
+
+      -> [Bytecode compiler] -> Bytecode -> [Virtual machine]
+                                         -> [Just-in-time compliler] -> Native code
+                                         
+      -> [Ahead of time compiler] -> Native code

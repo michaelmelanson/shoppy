@@ -1,3 +1,5 @@
+import { Token, Operator } from "./types";
+
 const WHITESPACE = /^\s/;
 const FUNCTION = /^function/;
 const RETURN = /^return/;
@@ -6,34 +8,10 @@ const OPEN_PAREN = /^\(/;
 const CLOSE_PAREN = /^\)/;
 const OPEN_BRACE = /^\{/;
 const CLOSE_BRACE = /^\}/;
+const COMMA = /^[,]/;
 const OPERATOR = /^[+]/;
 const NUMBER_LITERAL = /^\d+/;
 const END_OF_STATEMENT = /^;/;
-
-enum Operator {
-  Plus = "+",
-}
-
-interface TokenLocation {
-  line: number;
-  col: number;
-}
-
-type Token = (
-  | { type: "function" }
-  | { type: "return" }
-  | { type: "identifier", name: string; }
-  | { type: "open-paren" }
-  | { type: "close-paren" }
-  | { type: "open-brace" }
-  | { type: "close-brace" }
-  | { type: "operator", op: Operator }
-  | { type: "number-literal", value: number }
-  | { type: "end-of-statement" }
-  | { type: "end-of-file" }
-) & {
-  location: TokenLocation;
-};
 
 export function lexer(source: string) {
   let line = 1;
@@ -92,6 +70,9 @@ export function lexer(source: string) {
       continue;
     } else if ((match = tryToken(CLOSE_BRACE))) {
       tokens.push({ type: "close-brace", location: match.location });
+      continue;
+    } else if ((match = tryToken(COMMA))) {
+      tokens.push({ type: "comma", location: match.location });
       continue;
     } else if ((match = tryToken(OPERATOR))) {
       tokens.push({
